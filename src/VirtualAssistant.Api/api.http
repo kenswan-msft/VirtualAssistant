@@ -1,0 +1,11 @@
+@ApiService_HostAddress = http://localhost:5424
+
+POST {{ApiService_HostAddress}}/api/ai/chat/62c184c0-845a-4047-b281-1a5866cbbcaa
+Accept: application/json
+Content-Type: application/json
+
+{
+  "prompt": "Who are you?"
+}
+
+###

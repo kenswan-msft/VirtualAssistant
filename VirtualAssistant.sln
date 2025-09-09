@@ -1,19 +1,32 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualAssistant.Cli", "src\VirtualAssistant.Cli\VirtualAssistant.Cli.csproj", "{58E3ABFF-DB1A-4047-B553-CB3292E5C7BD}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.0.0
+MinimumVisualStudioVersion = 17.8.0.0
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualAssistant.AppHost", "src\VirtualAssistant.AppHost\VirtualAssistant.AppHost.csproj", "{B75208BA-3A2B-407C-8A77-F3C4360835EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualAssistant.Core", "src\VirtualAssistant.Core\VirtualAssistant.Core.csproj", "{8331D909-9A54-4F17-8EB2-5E4901BA2FD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualAssistant.ServiceDefaults", "src\VirtualAssistant.ServiceDefaults\VirtualAssistant.ServiceDefaults.csproj", "{E60791D6-A56B-4D4C-8B48-DFC832EB54C9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E6618505-A8C3-41B3-8EA2-F4437DA5D0F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualAssistant.Api", "src\VirtualAssistant.Api\VirtualAssistant.Api.csproj", "{E36957D6-E19D-415E-A58D-F1D20900BDF2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtualAssistant.Tests", "src\VirtualAssistant.Tests\VirtualAssistant.Tests.csproj", "{74EE35FF-13A5-479A-A196-AA81C01F800D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9101BEA9-13F2-4AFA-B734-C276D33B0645}"
 	ProjectSection(SolutionItems) = preProject
-		Directory.Build.props = Directory.Build.props
-		Directory.Packages.props = Directory.Packages.props
-		global.json = global.json
-		NuGet.config = NuGet.config
-		README.md = README.md
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		NuGet.config = NuGet.config
+		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualAssistant.Web.Server", "src\VirtualAssistant.Web\VirtualAssistant.Web.Server\VirtualAssistant.Web.Server.csproj", "{74AC6C8C-9970-41CC-ABB3-BE824FC315FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualAssistant.Web.Client", "src\VirtualAssistant.Web\VirtualAssistant.Web.Client\VirtualAssistant.Web.Client.csproj", "{E32046FB-16AA-4422-AE66-00DDBBE89246}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualAssistant.RnD", "src\VirtualAssistant.RnD\VirtualAssistant.RnD.csproj", "{1992E29D-6261-407A-A6F6-E65A60569B1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualAssistant.Cli", "src\VirtualAssistant.Cli\VirtualAssistant.Cli.csproj", "{3315FA1F-29F0-4F61-B0C4-9681DFE34629}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,13 +34,43 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{58E3ABFF-DB1A-4047-B553-CB3292E5C7BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{58E3ABFF-DB1A-4047-B553-CB3292E5C7BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{58E3ABFF-DB1A-4047-B553-CB3292E5C7BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{58E3ABFF-DB1A-4047-B553-CB3292E5C7BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8331D909-9A54-4F17-8EB2-5E4901BA2FD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8331D909-9A54-4F17-8EB2-5E4901BA2FD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8331D909-9A54-4F17-8EB2-5E4901BA2FD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8331D909-9A54-4F17-8EB2-5E4901BA2FD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75208BA-3A2B-407C-8A77-F3C4360835EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75208BA-3A2B-407C-8A77-F3C4360835EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75208BA-3A2B-407C-8A77-F3C4360835EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75208BA-3A2B-407C-8A77-F3C4360835EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E60791D6-A56B-4D4C-8B48-DFC832EB54C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E60791D6-A56B-4D4C-8B48-DFC832EB54C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E60791D6-A56B-4D4C-8B48-DFC832EB54C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E60791D6-A56B-4D4C-8B48-DFC832EB54C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E36957D6-E19D-415E-A58D-F1D20900BDF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E36957D6-E19D-415E-A58D-F1D20900BDF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E36957D6-E19D-415E-A58D-F1D20900BDF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E36957D6-E19D-415E-A58D-F1D20900BDF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74EE35FF-13A5-479A-A196-AA81C01F800D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74EE35FF-13A5-479A-A196-AA81C01F800D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74EE35FF-13A5-479A-A196-AA81C01F800D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74EE35FF-13A5-479A-A196-AA81C01F800D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74AC6C8C-9970-41CC-ABB3-BE824FC315FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74AC6C8C-9970-41CC-ABB3-BE824FC315FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74AC6C8C-9970-41CC-ABB3-BE824FC315FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74AC6C8C-9970-41CC-ABB3-BE824FC315FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E32046FB-16AA-4422-AE66-00DDBBE89246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E32046FB-16AA-4422-AE66-00DDBBE89246}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E32046FB-16AA-4422-AE66-00DDBBE89246}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E32046FB-16AA-4422-AE66-00DDBBE89246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1992E29D-6261-407A-A6F6-E65A60569B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1992E29D-6261-407A-A6F6-E65A60569B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1992E29D-6261-407A-A6F6-E65A60569B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1992E29D-6261-407A-A6F6-E65A60569B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3315FA1F-29F0-4F61-B0C4-9681DFE34629}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3315FA1F-29F0-4F61-B0C4-9681DFE34629}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3315FA1F-29F0-4F61-B0C4-9681DFE34629}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3315FA1F-29F0-4F61-B0C4-9681DFE34629}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {405CFC77-CC39-4500-ADEE-F40CF571E7F3}
 	EndGlobalSection
 EndGlobal

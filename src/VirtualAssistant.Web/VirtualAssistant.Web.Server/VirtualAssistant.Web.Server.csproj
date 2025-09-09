@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+    <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\VirtualAssistant.ServiceDefaults\VirtualAssistant.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\VirtualAssistant.Web.Client\VirtualAssistant.Web.Client.csproj" />
+  </ItemGroup>
+
+</Project>

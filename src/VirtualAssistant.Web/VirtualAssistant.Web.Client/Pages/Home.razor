@@ -1,0 +1,42 @@
+﻿@page "/"
+@using VirtualAssistant.Web.Client.Chats
+
+<PageTitle>Home</PageTitle>
+
+<h1>Demo Chat Feature</h1>
+
+<h5>Prompt:</h5>
+<input type="text" @bind="prompt"/>
+<button @onclick="OnSendClicked">Send</button>
+<br/><br/>
+<h5>Response:</h5>
+<p>
+    @foreach (string message in messages)
+    {
+        @message
+    }
+</p>
+
+@code
+{
+    private readonly List<string> messages = [];
+    private string prompt = string.Empty;
+
+    [Inject]
+    private ChatService ChatService { get; set; }
+
+    private async Task OnSendClicked()
+    {
+        messages.Clear();
+        StateHasChanged();
+
+        await foreach (string chat in ChatService.StreamAsync(
+                           Guid.NewGuid(),
+                           prompt))
+        {
+            messages.Add(chat);
+            StateHasChanged();
+            await Task.Delay(100);
+        }
+    }
+}

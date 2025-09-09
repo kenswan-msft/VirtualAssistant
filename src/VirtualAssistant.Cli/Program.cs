@@ -1,15 +1,10 @@
-﻿// -------------------------------------------------------
-// Copyright (c) Ken Swan. All rights reserved.
-// Licensed under the MIT License
-// -------------------------------------------------------
-
-using AutomationIoC.CommandLine;
+﻿using AutomationIoC.CommandLine;
+using VirtualAssistant.Cli.Chats.Commands;
+using VirtualAssistant.Cli.Chats.Services;
+using VirtualAssistant.Cli.Configurations.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
 using System.Text.Json;
-using VirtualAssistant.Cli.Commands;
-using VirtualAssistant.Core;
-
-namespace VirtualAssistant.Cli;
 
 internal class Program
 {
@@ -18,20 +13,24 @@ internal class Program
         IAutomationConsoleBuilder builder =
             AutomationConsole.CreateDefaultBuilder<OpenChatCommand>("Virtual Assistant CLI", args);
 
-        builder.AddCommand<LoadAiModelCommand>("model", "load");
-
-        builder.Configure((hostBuilderContext, configurationBuilder) =>
-        {
-            configurationBuilder.AddVirtualAssistantConfiguration();
-        });
+        builder.Configure((hostBuilderContext, configurationBuilder) => { });
 
         builder.ConfigureServices((hostBuilderContext, serviceCollection) =>
         {
-            serviceCollection.AddVirtualAssistantData();
+            IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
+
+            kernelBuilder.Services.AddOptions<LocalAiModelOptions>()
+                .BindConfiguration(nameof(LocalAiModelOptions));
+
+            kernelBuilder.Services.AddScoped<LlamaChatAdapter>();
+            kernelBuilder.Services.AddScoped<LocalOpenAIChatAdapter>();
+            kernelBuilder.Services.AddSingleton<IAIServiceSelector, ChatCompletionServiceFactory>();
+
+            serviceCollection.AddScoped(_ => kernelBuilder.Build());
 
             serviceCollection
                 .AddKeyedSingleton(
-                    JsonSerializerOptionKeys.Console,
+                    JsonSerializerConfigurations.Console,
                     (serviceProvider, key) =>
                         new JsonSerializerOptions(JsonSerializerDefaults.Web)
                         {
@@ -39,7 +38,7 @@ internal class Program
                             WriteIndented = true
                         })
                 .AddKeyedSingleton(
-                    JsonSerializerOptionKeys.Web,
+                    JsonSerializerConfigurations.Web,
                     (serviceProvider, key) =>
                         new JsonSerializerOptions(JsonSerializerDefaults.Web));
         });
@@ -50,7 +49,7 @@ internal class Program
     }
 }
 
-internal enum JsonSerializerOptionKeys
+internal enum JsonSerializerConfigurations
 {
     Console,
     Web

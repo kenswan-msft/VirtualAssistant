@@ -3,7 +3,6 @@
   <PropertyGroup Label="Build Settings">
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Label="Compile Settings">
@@ -13,12 +12,12 @@
 
   <PropertyGroup Label="Documentation Settings">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <!--
-      Make sure any documentation comments which are included in code get checked for syntax during the build, but do
-      not report warnings for missing comments.
-      CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member'
-    -->
-    <NoWarn>$(NoWarn);1591</NoWarn>
+    <!-- Missing XML comment for publicly visible type or member -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Language Settings">
+    <LangVersion>Preview</LangVersion>
   </PropertyGroup>
 
 </Project>
