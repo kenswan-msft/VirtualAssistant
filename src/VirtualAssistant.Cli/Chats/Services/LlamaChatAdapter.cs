@@ -35,6 +35,7 @@ public class LlamaChatAdapter(IOptions<LocalAiModelOptions> options) : IChatComp
         Kernel? kernel = null,
         CancellationToken cancellationToken = default)
     {
+        // TODO: Use executionSettings to configure model
         await InitializeInteractiveExecutorAsync(cancellationToken).ConfigureAwait(false);
 
         var response = new StringBuilder();

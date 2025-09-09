@@ -25,7 +25,7 @@ public class LocalOpenAIChatAdapter : IChatCompletionService
 
     public IReadOnlyDictionary<string, object?> Attributes { get; } = new Dictionary<string, object?>
     {
-        ["model"] = "local-openai"
+        ["serviceId"] = "docker"
     };
 
     public async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory,
