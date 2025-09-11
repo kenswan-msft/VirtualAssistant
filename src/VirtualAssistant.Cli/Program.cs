@@ -1,6 +1,7 @@
 ﻿using AutomationIoC.CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
 using System.Text.Json;
 using VirtualAssistant.Cli.Chats.Commands;
 using VirtualAssistant.Cli.Chats.Services;
@@ -22,6 +23,8 @@ internal class Program
             kernelBuilder.Services.AddOptions<LocalAiModelOptions>()
                 .BindConfiguration(nameof(LocalAiModelOptions));
 
+            kernelBuilder.Services.AddSingleton(hostBuilderContext.Configuration);
+
             kernelBuilder.AddOpenAIChatCompletion(
                 modelId: "ai/gpt-oss",
                 endpoint: new("http://localhost:12434/engines/v1"),
@@ -30,11 +33,7 @@ internal class Program
                 serviceId: "docker",
                 httpClient: null);
 
-            // TODO: See if above AddOpenAIChatCompletion works for local dock model runner
-            // If not, use the LocalOpenAIChatAdapter implementation below
-            // kernelBuilder.Services.AddKeyedScoped<LocalOpenAIChatAdapter>("docker");
-
-            kernelBuilder.Services.AddKeyedScoped<LlamaChatAdapter>("llama");
+            kernelBuilder.Services.AddKeyedScoped<IChatCompletionService, LlamaChatAdapter>("llama");
 
             serviceCollection.AddScoped(_ => kernelBuilder.Build());
 

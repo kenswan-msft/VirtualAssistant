@@ -33,7 +33,7 @@ public class OpenChatCommand : IAutomationCommand
             Kernel kernel = context.ServiceProvider.GetRequiredService<Kernel>();
 
             IChatCompletionService chatCompletionService = kernel.Services
-                .GetRequiredKeyedService<IChatCompletionService>(serviceId ?? "docker");
+                .GetRequiredKeyedService<IChatCompletionService>(serviceId ?? "llama");
 
             var promptExecutionSettings = new PromptExecutionSettings
             {
@@ -63,8 +63,17 @@ public class OpenChatCommand : IAutomationCommand
         try
         {
             var chatHistory = new ChatHistory();
-            chatHistory.AddDeveloperMessage("You are a helpful assistant.");
-            chatHistory.AddUserMessage("Hello, who are you?");
+            const string endOfMessageIndicator = "###END###";
+
+            chatHistory.AddSystemMessage(
+                "You are a helpful assistant. When you are finished with your message" +
+                $" please respond with '{endOfMessageIndicator}' on a new line by itself.");
+
+            Console.WriteLine("Welcome to the Virtual Assistant CLI!");
+            Console.WriteLine("Type your message and press Enter to chat. Type 'exit' to quit.");
+
+            string userMessage = Console.ReadLine();
+            chatHistory.AddUserMessage(userMessage);
 
             IAsyncEnumerable<StreamingChatMessageContent> response =
                 chatCompletionService.GetStreamingChatMessageContentsAsync(
@@ -85,7 +94,7 @@ public class OpenChatCommand : IAutomationCommand
             {
                 if (!string.IsNullOrEmpty(update.Content))
                 {
-                    Console.WriteLine(update.Content);
+                    Console.Write(update.Content);
                 }
             }
 

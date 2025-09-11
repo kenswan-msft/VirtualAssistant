@@ -1,12 +1,11 @@
-﻿using VirtualAssistant.Cli.Configurations.Models;
-using LLama;
+﻿using LLama;
 using LLama.Common;
-using LLama.Sampling;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using System.Runtime.CompilerServices;
 using System.Text;
+using VirtualAssistant.Cli.Configurations.Models;
 using AuthorRole = Microsoft.SemanticKernel.ChatCompletion.AuthorRole;
 using ChatHistory = Microsoft.SemanticKernel.ChatCompletion.ChatHistory;
 
@@ -17,17 +16,14 @@ public class LlamaChatAdapter(IOptions<LocalAiModelOptions> options) : IChatComp
     private readonly InferenceParams inferenceParams = new()
     {
         MaxTokens = 4096,
-        AntiPrompts = ["User:", "System:"],
-        SamplingPipeline = new DefaultSamplingPipeline()
+        AntiPrompts = ["###END###"]
     };
 
-    private readonly LocalAiModelOptions localAiModelOptions = options.Value;
+    // private readonly LocalAiModelOptions localAiModelOptions = options.Value;
     private InteractiveExecutor? interactiveExecutor;
 
-    public IReadOnlyDictionary<string, object?> Attributes { get; } = new Dictionary<string, object?>
-    {
-        ["model"] = "local-llamasharp"
-    };
+    public IReadOnlyDictionary<string, object?> Attributes { get; } =
+        new Dictionary<string, object?> { ["serviceId"] = "llama" };
 
     public async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(
         ChatHistory chatHistory,
@@ -35,9 +31,6 @@ public class LlamaChatAdapter(IOptions<LocalAiModelOptions> options) : IChatComp
         Kernel? kernel = null,
         CancellationToken cancellationToken = default)
     {
-        // TODO: Use executionSettings to configure model
-        await InitializeInteractiveExecutorAsync(cancellationToken).ConfigureAwait(false);
-
         var response = new StringBuilder();
 
         await foreach (StreamingChatMessageContent? streamingChatMessageContent in
@@ -53,7 +46,8 @@ public class LlamaChatAdapter(IOptions<LocalAiModelOptions> options) : IChatComp
 
         return
         [
-            new ChatMessageContent(role: AuthorRole.Assistant, content: response.ToString(), modelId: null,
+            new(
+                role: AuthorRole.Assistant, content: response.ToString(), modelId: null,
                 innerContent: null, encoding: null, metadata: null)
         ];
     }
@@ -64,24 +58,42 @@ public class LlamaChatAdapter(IOptions<LocalAiModelOptions> options) : IChatComp
         Kernel? kernel = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        await InitializeInteractiveExecutorAsync(cancellationToken).ConfigureAwait(false);
+        string modelPath = "";
+        // var modelParameters = new ModelParams(localAiModelOptions.ModelPath)
+        Console.WriteLine("Starting to load model from " + options.Value.ContextSize);
 
+        var modelParameters = new ModelParams(modelPath)
+        {
+            ContextSize = 200,
+            // ContextSize = (uint)localAiModelOptions.ContextSize,
+            GpuLayerCount = 4
+            // GpuLayerCount = localAiModelOptions.GpuLayerCount
+        };
+
+        using LLamaWeights llamaWeights =
+            await LLamaWeights.LoadFromFileAsync(modelParameters, cancellationToken)
+                .ConfigureAwait(false);
+
+        using LLamaContext lLamaContext = llamaWeights.CreateContext(modelParameters);
+        interactiveExecutor = new(lLamaContext);
         LLama.Common.ChatHistory llamaChatHistory = ConvertToLlamaChatHistory(chatHistory);
+        int lastMessageIndex = llamaChatHistory.Messages.Count - 1;
+        LLama.Common.ChatHistory.Message userMessage = llamaChatHistory.Messages[lastMessageIndex];
+        llamaChatHistory.Messages.RemoveAt(lastMessageIndex);
+
         var session = new ChatSession(interactiveExecutor, llamaChatHistory);
 
-        ChatMessageContent lastMessage = chatHistory.LastOrDefault();
-        if (lastMessage == null)
+        if (string.IsNullOrWhiteSpace(userMessage.Content))
         {
             yield break;
         }
 
         await foreach (string? text in session.ChatAsync(
-                           new LLama.Common.ChatHistory.Message(LLama.Common.AuthorRole.User,
-                               lastMessage.Content ?? string.Empty),
+                           userMessage,
                            inferenceParams,
                            cancellationToken).ConfigureAwait(false))
         {
-            yield return new StreamingChatMessageContent(AuthorRole.Assistant, text);
+            yield return new(AuthorRole.Assistant, text);
         }
     }
 
@@ -103,26 +115,5 @@ public class LlamaChatAdapter(IOptions<LocalAiModelOptions> options) : IChatComp
         }
 
         return llamaHistory;
-    }
-
-    private async Task InitializeInteractiveExecutorAsync(CancellationToken cancellationToken = default)
-    {
-        if (interactiveExecutor is not null)
-        {
-            return;
-        }
-
-        var modelParameters = new ModelParams(localAiModelOptions.ModelPath)
-        {
-            ContextSize = (uint)localAiModelOptions.ContextSize,
-            GpuLayerCount = localAiModelOptions.GpuLayerCount
-        };
-
-        using LLamaWeights llamaWeights =
-            await LLamaWeights.LoadFromFileAsync(modelParameters, cancellationToken)
-                .ConfigureAwait(false);
-
-        using LLamaContext lLamaContext = llamaWeights.CreateContext(modelParameters);
-        interactiveExecutor = new InteractiveExecutor(lLamaContext);
     }
 }
